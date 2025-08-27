@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Metal Roofing Takeoff Tool</title>
+  <style>
+    /* Global Settings */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #f2f2f7;
+      color: #1c1c1e;
+    }
+    body {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background-color: #1e1e20;
+      color: #f2f2f7;
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+      border-right: 1px solid #303036;
+    }
+    .sidebar h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 20px 20px;
+      letter-spacing: 0.5px;
+    }
+    .nav-list {
+      list-style: none;
+      flex-grow: 1;
+    }
+    .nav-list li {
+      padding: 12px 20px;
+      margin: 4px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+    .nav-list li:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .nav-list li.active {
+      background-color: #007aff;
+      color: #fff;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex-grow: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      background-color: #fff;
+      padding: 16px 24px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1c1c1e;
+    }
+    header .user-menu {
+      font-size: 0.95rem;
+      color: #007aff;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    header .user-menu:hover {
+      color: #005bb5;
+    }
+
+    /* Section Cards */
+    section {
+      background-color: #fff;
+      margin: 20px 24px;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: box-shadow 0.2s;
+    }
+    section:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    section h2 {
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+      color: #1c1c1e;
+      font-weight: 500;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: #3a3a3c;
+    }
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #d1d1d6;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input[type="text"]:focus,
+    .form-group input[type="email"]:focus,
+    .form-group input[type="password"]:focus,
+    .form-group select:focus {
+      border-color: #007aff;
+      box-shadow: 0 0 0 3px rgba(0,122,255,0.2);
+      outline: none;
+    }
+    .radio-group {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: #3a3a3c;
+    }
+    .radio-group input[type="radio"] {
+      margin-right: 6px;
+      accent-color: #007aff;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary {
+      background-color: #007aff;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background-color: #005bb5;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .btn-secondary {
+      background-color: #8e8e93;
+      color: #fff;
+    }
+    .btn-secondary:hover {
+      background-color: #636366;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    table th, table td {
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    table th {
+      background-color: #f2f2f7;
+      text-align: left;
+      font-weight: 500;
+      color: #3a3a3c;
+    }
+    table tbody tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    /* Unstyled List for Settings & Help */
+    .plain-list {
+      list-style: none;
+      padding: 0;
+    }
+    .plain-list li {
+      margin-bottom: 12px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+      body {
+        flex-direction: column;
+      }
+      header {
+        position: static;
+      }
+      section {
+        margin: 12px;
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar">
+    <h2>Roofing Takeoff</h2>
+    <ul class="nav-list">
+      <li class="active">Dashboard</li>
+      <li>New Project</li>
+      <li>Materials</li>
+      <li>Estimate</li>
+      <li>Checkout</li>
+      <li>Settings</li>
+      <li>Help</li>
+      <li>Logout</li>
+    </ul>
+  </nav>
+
+  <!-- Main Content Area -->
+  <div class="main-content">
+    <!-- Header -->
+    <header>
+      <h1>Metal Roofing Takeoff Tool</h1>
+      <div class="user-menu">Hi, Carter ▾</div>
+    </header>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard">
+      <h2>Project Dashboard</h2>
+      <button class="btn btn-primary">New Project</button>
+      <div style="margin-top: 20px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Project Name</th>
+              <th>Date Created</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>123 Main St Renovation</td>
+              <td>2025-06-01</td>
+              <td>Completed</td>
+              <td><button class="btn btn-secondary">View</button></td>
+            </tr>
+            <tr>
+              <td>Maple Avenue Church</td>
+              <td>2025-05-28</td>
+              <td>In Progress</td>
+              <td><button class="btn btn-secondary">View</button></td>
+            </tr>
+            <tr>
+              <td>Residential Demo</td>
+              <td>2025-05-20</td>
+              <td>Draft</td>
+              <td><button class="btn btn-secondary">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- New Project Section -->
+    <section id="new-project">
+      <h2>New Project Input</h2>
+      <form>
+        <div class="form-group">
+          <label for="address">Property Address</label>
+          <input type="text" id="address" name="address" placeholder="1234 Elm St, City, State">
+        </div>
+        <div class="form-group radio-group">
+          <label>
+            <input type="radio" name="projectType" value="commercial" checked>
+            Commercial
+          </label>
+          <label>
+            <input type="radio" name="projectType" value="residential">
+            Residential
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Project</button>
+      </form>
+    </section>
+
+    <!-- Material Selection Section -->
+    <section id="materials">
+      <h2>Panel &amp; Material Selection</h2>
+      <form>
+        <div class="form-group">
+          <label for="panel-profile">Panel Profile</label>
+          <select id="panel-profile" name="panelProfile">
+            <option value="5v-crimp">5V Crimp (IM5VC)</option>
+            <option value="bell-top-rib">¾″ Bell Top Rib (IM36TR)</option>
+            <option value="rib">1¼″ Rib (IM36PBR)</option>
+            <option value="standing-flange">Standing-Seam Flange (IM100FF)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="gauge">Gauge / Material</label>
+          <select id="gauge" name="gauge">
+            <option value="26ga-galvalume">26 ga Galvalume</option>
+            <option value="24ga-galvalume">24 ga Galvalume</option>
+            <option value="032aluminum">.032″ Aluminum</option>
+            <option value="040aluminum">.040″ Aluminum</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="waste">Waste Percentage (%)</label>
+          <input type="text" id="waste" name="waste" value="10">
+        </div>
+        <button type="submit" class="btn btn-primary">Save Materials</button>
+      </form>
+    </section>
+
+    <!-- Estimate Output Section -->
+    <section id="estimate">
+      <h2>Estimate Output</h2>
+      <div style="margin-bottom: 20px;">
+        <p><strong>Roof Area:</strong> 1,200 sq ft</p>
+        <p><strong>Primary Slope:</strong> 6/12</p>
+        <p><strong>Panel LF:</strong> 1,050 ft</p>
+        <p><strong>Panel Area:</strong> 900 sq ft</p>
+        <p><strong>Waste %:</strong> 10%</p>
+      </div>
+      <h3 style="margin-bottom: 12px;">Trim Takeoff</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Length (ft)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Eave</td>
+            <td>150</td>
+          </tr>
+          <tr>
+            <td>Valley</td>
+            <td>40</td>
+          </tr>
+          <tr>
+            <td>Hip</td>
+            <td>60</td>
+          </tr>
+          <tr>
+            <td>Ridge</td>
+            <td>50</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Pricing & Checkout Section -->
+    <section id="checkout">
+      <h2>Pricing &amp; Checkout</h2>
+      <div style="margin-bottom: 20px;">
+        <p><strong>Takeoff Summary:</strong></p>
+        <ul style="margin-left: 20px; margin-bottom: 12px;">
+          <li>1 Takeoff (Basic PDF)</li>
+          <li>Material Qty: 1,020 sq ft</li>
+          <li>Trim Qty: 300 ft</li>
+        </ul>
+        <p><strong>Price:</strong> $25.00</p>
+      </div>
+      <form>
+        <div class="form-group">
+          <label for="card-number">Credit Card Number</label>
+          <input type="text" id="card-number" placeholder="•••• •••• •••• ••••">
+        </div>
+        <div class="form-group">
+          <label for="expiry">Expiry Date</label>
+          <input type="text" id="expiry" placeholder="MM/YY">
+        </div>
+        <div class="form-group">
+          <label for="cvc">CVC</label>
+          <input type="text" id="cvc" placeholder="123">
+        </div>
+        <button type="submit" class="btn btn-primary">Pay $25.00</button>
+      </form>
+    </section>
+
+    <!-- Settings / Account Management Section -->
+    <section id="settings">
+      <h2>Settings &amp; Account Management</h2>
+      <ul class="plain-list">
+        <li><button class="btn btn-secondary" style="width: 100%;">Subscription</button></li>
+        <li><button class="btn btn-secondary" style="width: 100%;">Payment History</button></li>
+        <li><button class="btn btn-secondary" style="width: 100%;">Account Info</button></li>
+        <li><button class="btn btn-secondary" style="width: 100%;">Manage Notifications</button></li>
+      </ul>
+    </section>
+
+    <!-- Help / FAQ / Feedback Section -->
+    <section id="help">
+      <h2>Help / FAQ / Feedback</h2>
+      <ul class="plain-list">
+        <li><button class="btn btn-secondary" style="width: 100%;">Help</button></li>
+        <li><button class="btn btn-secondary" style="width: 100%;">FAQ</button></li>
+        <li><button class="btn btn-secondary" style="width: 100%;">Contact Support</button></li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>
