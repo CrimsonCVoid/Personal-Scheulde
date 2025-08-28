@@ -1,7 +1,7 @@
 import { Separator } from '@/components/ui/separator';
 import { useSettingsStore } from '@/features/settings/store';
 import { importCanvasData, getCanvasImportStats } from '@/lib/canvasDataProcessor';
-import { importCanvasData, getCanvasImportStats } from '@/lib/canvasDataProcessor';
+import { Sun, Moon, Monitor, Download, Upload, Palette, ExternalLink, CheckCircle } from 'lucide-react';
 import { Sun, Moon, Monitor, Download, Upload, Palette, ExternalLink, CheckCircle, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 
