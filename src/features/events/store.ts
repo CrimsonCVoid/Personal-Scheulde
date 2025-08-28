@@ -24,15 +24,12 @@ searchEvents: (query: string) => Event[];
         return get().events.find((event) => event.canvasId === canvasId);
       },
 
-      getWeightedEvents: () => {
-        return get().events.filter((event) => event.isWeighted);
-      },
-
-      getEventsByCourse: (canvasCourseId) => {
-        return get().events.filter((event) => event.canvasCourseId === canvasCourseId);
-      },
-      getEventByCanvasId: (canvasId) => {
-        return get().events.find((event) => event.canvasId === canvasId);
+      getUpcomingEvents: (limit = 5) => {
+        const now = new Date();
+        return get().events
+          .filter((event) => parseISO(event.start) > now)
+          .sort((a, b) => parseISO(a.start).getTime() - parseISO(b.start).getTime())
+          .slice(0, limit);
       },
 
       getWeightedEvents: () => {
@@ -42,3 +39,5 @@ searchEvents: (query: string) => Event[];
       getEventsByCourse: (canvasCourseId) => {
         return get().events.filter((event) => event.canvasCourseId === canvasCourseId);
       },
+
+      searchEvents: (query) => {
