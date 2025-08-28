@@ -88,9 +88,7 @@ export default function CanvasModulesPage() {
           </Button>
         </div>
       </div>
-      </motion.div>
-    </div>
-  );
+    );
   }
 
   return (
@@ -204,6 +202,7 @@ export default function CanvasModulesPage() {
           </Card>
         </TabsContent>
       </Tabs>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
