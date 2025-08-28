@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
 import { useSettingsStore } from '@/features/settings/store';
 import { exchangeCanvasToken, getCurrentUser, CanvasApiError } from '@/lib/canvasApi';
+import { importCanvasData } from '@/lib/canvasDataProcessor';
 import { toast } from 'sonner';
 
 export default function CanvasOAuthCallback() {
@@ -56,6 +57,9 @@ export default function CanvasOAuthCallback() {
         const user = await getCurrentUser();
         setCanvasUser(user);
 
+        // Import Canvas data automatically after successful connection
+        console.log('Importing Canvas data...');
+        await importCanvasData();
         setStatus('success');
         toast.success(`Successfully connected to Canvas as ${user.name}`);
 
