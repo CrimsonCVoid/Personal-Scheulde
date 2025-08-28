@@ -163,7 +163,8 @@ export default function SettingsPage() {
   };
 
   return (
-    <div>
+    <div className="p-6 w-full h-full overflow-auto">
+      <div className="max-w-4xl mx-auto">
         {/* Canvas LMS Integration */}
         <Card>
           <CardHeader>
