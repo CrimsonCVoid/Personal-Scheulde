@@ -88,16 +88,19 @@ export default function CanvasModulesPage() {
           </Button>
         </div>
       </div>
-    );
+      </motion.div>
+    </div>
+  );
   }
 
   return (
-    <motion.div 
-      className="p-6 max-w-7xl mx-auto"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
+    <div className="w-full h-full overflow-auto">
+      <motion.div 
+        className="p-6 max-w-7xl mx-auto"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

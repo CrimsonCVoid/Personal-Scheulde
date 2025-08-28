@@ -339,6 +339,7 @@ export default function SettingsPage() {
         {/* Data Management */}
         <Card>
         </Card>
+      </div>
     </div>
   );
 }
