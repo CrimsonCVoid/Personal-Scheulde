@@ -31,3 +31,14 @@ searchEvents: (query: string) => Event[];
       getEventsByCourse: (canvasCourseId) => {
         return get().events.filter((event) => event.canvasCourseId === canvasCourseId);
       },
+      getEventByCanvasId: (canvasId) => {
+        return get().events.find((event) => event.canvasId === canvasId);
+      },
+
+      getWeightedEvents: () => {
+        return get().events.filter((event) => event.isWeighted);
+      },
+
+      getEventsByCourse: (canvasCourseId) => {
+        return get().events.filter((event) => event.canvasCourseId === canvasCourseId);
+      },

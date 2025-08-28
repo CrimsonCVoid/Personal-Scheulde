@@ -121,12 +121,12 @@ export default function CanvasOAuthCallback() {
                 Exchanging authorization code...
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <div className="w-2 h-2 bg-gray-300 rounded-full" />
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
                 Fetching user information...
               </div>
               <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <div className="w-2 h-2 bg-gray-300 rounded-full" />
-                Completing setup...
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
+                Importing course data...
               </div>
             </div>
           )}
@@ -134,10 +134,10 @@ export default function CanvasOAuthCallback() {
           {status === 'success' && (
             <div className="text-center space-y-4">
               <div className="text-sm text-muted-foreground">
-                You can now import assignments and due dates from Canvas LMS.
+                You can now view your Canvas assignments and weighted modules in the calendar.
               </div>
-              <Button onClick={() => navigate('/settings')} className="w-full">
-                Go to Settings
+              <Button onClick={() => navigate('/canvas')} className="w-full">
+                View Canvas Data
               </Button>
             </div>
           )}
