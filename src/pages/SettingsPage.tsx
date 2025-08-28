@@ -27,6 +27,51 @@ export default function SettingsPage() {
     setSlotSize
   } = useSettingsStore();
 
+  const importStats = getCanvasImportStats();
+
+  const handleConnectCanvas = () => {
+    if (!canvasDomain) {
+      toast.error('Please enter your Canvas domain first');
+      return;
+    }
+
+    // Construct Canvas OAuth URL
+    const clientId = import.meta.env.VITE_CANVAS_CLIENT_ID;
+    const redirectUri = `${window.location.origin}/oauth/canvas/callback`;
+    const state = crypto.randomUUID(); // Generate random state for security
+    
+    if (!clientId) {
+      toast.error('Canvas integration is not configured. Please check your environment variables.');
+      return;
+    }
+
+    const authUrl = new URL(`${canvasDomain}/login/oauth2/auth`);
+    authUrl.searchParams.set('client_id', clientId);
+    authUrl.searchParams.set('response_type', 'code');
+    authUrl.searchParams.set('redirect_uri', redirectUri);
+    authUrl.searchParams.set('state', state);
+    authUrl.searchParams.set('scope', 'url:GET|/api/v1/courses url:GET|/api/v1/courses/:course_id/assignments url:GET|/api/v1/planner/items url:GET|/api/v1/calendar_events url:GET|/api/v1/users/self');
+
+    // Store state in sessionStorage for validation
+    sessionStorage.setItem('canvas_oauth_state', state);
+
+    // Redirect to Canvas for authorization
+    window.location.href = authUrl.toString();
+  };
+
+  const handleDisconnectCanvas = () => {
+    clearCanvasTokens();
+    toast.success('Disconnected from Canvas LMS');
+  };
+
+  const handleImportCanvas = async () => {
+    try {
+      await importCanvasData();
+    } catch (error) {
+      // Error handling is done in importCanvasData
+    }
+  };
+
   const handleConnectCanvas = () => {
     if (!canvasDomain) {
       toast.error('Please enter your Canvas domain first');
